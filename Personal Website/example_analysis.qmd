@@ -2,3 +2,72 @@
 title: "Example Analysis"
 ---
 
+
+My question:
+
+Intended Audience:
+
+Data description:
+
+Data dictionary:
+
+
+```{r load data}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+# read the data from Git
+chess <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2024/2024-10-01/chess.csv')
+
+# look at the data
+names(chess)
+
+# drop any na rows in  the dataframe
+chess <- drop_na(chess)
+
+# select a couple continuous variables to look at
+vars <- c("turns", "winner" , "white_rating", "black_rating","time_increment", "victory_status")
+chess<- chess %>% select(vars)
+
+# filter the data to only games with a winner, no draws
+chess <- chess %>% filter(chess$winner != "draw")
+
+# make a column that shows the difference between the white and black ranking
+chess <- chess %>%
+  mutate(
+    dif_rank = white_rating-black_rating
+  )
+
+# rename to make more clear
+chess <- rename(chess, time = time_increment)
+
+# make a box plot that compares the difference in ranking o the winner
+p <- ggplot(chess, aes(winner, dif_rank))
+p + geom_boxplot() 
+
+# make a line plot to compare the difference in rating to the number of moves and the type of win
+e <- ggplot(chess, aes(dif_rank, turns))
+e + geom_point() 
+
+f <- e + geom_point() 
+
+# Use vars() to supply variables from the dataset:
+f + facet_grid(rows = vars(victory_status))
+
+g <- ggplot(chess, aes(dif_rank))
+n <- g+ geom_histogram()
+n + facet_wrap(vars(winner))
+
+# replace every NA in the data frame 
+
+```
+
+
+
+I used the functions select, filter, rename,   from dplyr
+
+I used the functions mutate, drop_na from tidyr
+
+I used the functions geom_histogram(), geom_point() , geom_boxplot(), facet_wrap, and facet_grid from ggplot2. 
+
