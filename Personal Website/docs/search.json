@@ -1,0 +1,65 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Educational Background:\nI grew up in Washington DC and attended the School without Walls high shcool. I then went on to study math at Haverford College, where I also completed a minor in chemistry and a minor in spanish. Throughout college I tried to merge my interests in math and science, I did research in a computational chemistry lab at Haverford and did a mathematical biology summer research experience. All of these experiences led me to want to see new ways that science and math could be used together to explain the world. I continued this path working at a biotech startup after graduating from college. During that job I realized that biostatistics was the field where I could apply math to explain scientific phenomena and I applied for my PHD. I am very excited to be starting my PHD here at Johns Hopkins and am excited to learn even more ways to apply statistics and math to science.\nHobbies:\nI was a setter on the volleyball team at Haverford College so I am now trying to find places to play in Baltimore. I also love to play board games and card games, my favorite at the moment is Bohnanza. Finally, I like to go backpacking and camping and worked at a summer camp for a few summers leading backpacking trips for young people."
+  },
+  {
+    "objectID": "example_analysis.html",
+    "href": "example_analysis.html",
+    "title": "Example Analysis",
+    "section": "",
+    "text": "Jana Mathews (2024)"
+  },
+  {
+    "objectID": "example_analysis.html#intended-audience",
+    "href": "example_analysis.html#intended-audience",
+    "title": "Example Analysis",
+    "section": "Intended Audience:",
+    "text": "Intended Audience:\nThis analysis could be used by current chess players to see how much their difference in ranking from another player may predict their ability to win against them. It could also be used by the website to determine if the way that they are ranking the players is a good system."
+  },
+  {
+    "objectID": "example_analysis.html#data-description",
+    "href": "example_analysis.html#data-description",
+    "title": "Example Analysis",
+    "section": "Data description:",
+    "text": "Data description:\nThis data comes from over 20,000 games of chess played on the site Lichess.org and describes the ranking of each player, how the game went and the winner of the game. (MITCHELL J n.d.)"
+  },
+  {
+    "objectID": "example_analysis.html#data-dictionary",
+    "href": "example_analysis.html#data-dictionary",
+    "title": "Example Analysis",
+    "section": "Data Dictionary",
+    "text": "Data Dictionary\nThe data dictionary can be found at the link in the “Other links” section on the left of this page (“Data Science Learning Community” n.d.)."
+  },
+  {
+    "objectID": "example_analysis.html#logisitic-regression",
+    "href": "example_analysis.html#logisitic-regression",
+    "title": "Example Analysis",
+    "section": "Logisitic Regression",
+    "text": "Logisitic Regression\nWe now want to fit a logistic regression model to the data to see if the difference in ranking variable has some significance in predicting the winner of the game.\n\n# make the winner a dummy variable 0,1\nchess$winner_dummy &lt;- ifelse(chess$winner == \"white\", 1, 0)\n\n# fit a logistic regression model to the data to predict winner based on difference in ranking\nglm.fit &lt;- glm(winner_dummy ~ dif_rank, data = chess, family = \"binomial\")\nsummary(glm.fit)\n\n\nCall:\nglm(formula = winner_dummy ~ dif_rank, family = \"binomial\", data = chess)\n\nCoefficients:\n             Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept) 8.227e-02  1.563e-02   5.264 1.41e-07 ***\ndif_rank    3.871e-03  8.407e-05  46.041  &lt; 2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 26447  on 19107  degrees of freedom\nResidual deviance: 23486  on 19106  degrees of freedom\nAIC: 23490\n\nNumber of Fisher Scoring iterations: 4\n\n\n\n\nThis p-value of 2e-16 indicates that we can reject the null hypothesis that the difference in rank does not have any impact on the winner.\n\n# fit a linear regression to predict turns by difference in ranking\nlm.fit &lt;- lm(turns ~ dif_rank + I(dif_rank^2), data=chess)\nsummary(lm.fit)\n\n\nCall:\nlm(formula = turns ~ dif_rank + I(dif_rank^2), data = chess)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-59.634 -22.537  -4.702  17.269 288.167 \n\nCoefficients:\n                Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)    6.071e+01  2.548e-01 238.308  &lt; 2e-16 ***\ndif_rank      -3.781e-03  9.287e-04  -4.072 4.69e-05 ***\nI(dif_rank^2) -2.373e-05  1.663e-06 -14.269  &lt; 2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 32.12 on 19105 degrees of freedom\nMultiple R-squared:  0.01178,   Adjusted R-squared:  0.01168 \nF-statistic: 113.9 on 2 and 19105 DF,  p-value: &lt; 2.2e-16\n\n\n\n\nThis p-value of 2e-16 indicates that we can reject the null hypothesis that the difference in rank does not have any impact on the number of turns taken."
+  },
+  {
+    "objectID": "example_analysis.html#summary",
+    "href": "example_analysis.html#summary",
+    "title": "Example Analysis",
+    "section": "Summary",
+    "text": "Summary\nOur goal from this analysis was to understand how the ranking of players affects the outcome of a chess match. When examining the data we created a variable looking at the difference in ranking of the white player and black player. We created a boxplot that showed us that when the white player won, the average difference in ranking was higher for the white player, and when the black player won the difference in ranking was higher for the black player. We later fit a logistic regression to find the relationship between the difference in ranking of the two players and the winner. This logistic regression had a very small p-value which tells us that there is likely a correlation between the difference in ranking of the two players and the winner of the game. I next wanted to look at if this difference in ranking affected the amount of turns a game took because my hypothesis was that if the difference in ranking was higher, than the player with the higher ranking may win in fewer turns. To examine this I plotted a scatter plot to look at the difference in ranking compared to the number of turns taken, in this scatter plot it looked like when the absolute value of the difference in ranking was large, then the game took less turns, this lined up with my hypothesis. I then fit a linear regression model with a degree 2 polynomial on the difference in ranking because the shape of the scatter plot looked more quadratic to me. The resulting p-value was very low which indicates there is a strong correlation between the difference in ranking and the number of turns a game took. From this analysis I think we have seen that the rankings of chess players on this website can provide a good indicator of the result of the game and also how the game will go in terms of the number of turns it may take."
+  },
+  {
+    "objectID": "example_analysis.html#packages-used",
+    "href": "example_analysis.html#packages-used",
+    "title": "Example Analysis",
+    "section": "Packages used",
+    "text": "Packages used\nDPLYR: I used the functions select, filter and rename from dplyr. TIDYR: I used the functions mutate and drop_na from tidyr. GGPLOT2: I used the functions geom_histogram(), geom_point() , geom_boxplot(), facet_wrap, and facet_grid from ggplot2."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Sara Hunsberger",
+    "section": "",
+    "text": "Sara Hunsberger\n\n\nMy name is Sara Hunsberger and I am a PHD student at Johns Hopkins Bloomberg School of Public Health. I was raised in Washington DC and completed my undergraduate degree at Haverford College. For fun I enjoy playing vollyball, backpacking and playing board games."
+  }
+]
