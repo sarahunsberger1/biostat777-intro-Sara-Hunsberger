@@ -1,18 +1,38 @@
 ---
 title: "Example Analysis"
+bibliography: references.bib
+format:
+    html:
+      other-links:
+      - text: Chess Data Dictionary
+        href: https://github.com/rfordatascience/tidytuesday/blob/master/data/2024/2024-10-01/readme.md
 ---
 
+![@jana_mathews_chess_2024](chess-pic.png)
 
-My question:
+# My question:
 
-Intended Audience:
+We want to examine how well the ranking of a chess player can predict the results of a chess game. 
 
-Data description:
+## Intended Audience:
 
-Data dictionary:
+This analysis could be used by current chess players to see how much their difference in ranking from another player may predict their ability to win against them. It could also be used by the website to determine if the way that they are ranking the players is a good system. 
+
+## Data description:
+
+This data comes from over 20,000 games of chess played on the site Lichess.org and describes the ranking of each player, how the game went and the winner of the game. [@mitchell_j_chess_nodate]
+
+## Data Dictionary
+
+The data dictionary can be found at the link in the "Other links" section on the left of this page [@noauthor_data_nodate]. 
+
+# Analysis
+
+### Data Cleaning
+We first want to load the data from the github repository. I then clean the data by dropping all NA values and selecting only the variables that I care about for this analysis. For the purposes of this analysis I only want to look at games that had a clear winner and did not have a draw, so I filtered the data based on games that did not end in a draw. Finally, I made a new column that is the difference between the white player ranking and the black player ranking because I am interested in how well this difference can describe how the game is played and the outcome. 
 
 
-```{r load data}
+```{r load data, message=FALSE, warning=FALSE}
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -41,33 +61,83 @@ chess <- chess %>%
 
 # rename to make more clear
 chess <- rename(chess, time = time_increment)
-
-# make a box plot that compares the difference in ranking o the winner
-p <- ggplot(chess, aes(winner, dif_rank))
-p + geom_boxplot() 
-
-# make a line plot to compare the difference in rating to the number of moves and the type of win
-e <- ggplot(chess, aes(dif_rank, turns))
-e + geom_point() 
-
-f <- e + geom_point() 
-
-# Use vars() to supply variables from the dataset:
-f + facet_grid(rows = vars(victory_status))
-
-g <- ggplot(chess, aes(dif_rank))
-n <- g+ geom_histogram()
-n + facet_wrap(vars(winner))
-
-# replace every NA in the data frame 
-
 ```
 
+### Plotting 
+
+In this section I create multiple plots to examine the data. I am interested in how the rankings of the players affects the outcome. Each of the following plots shows a different aspect of how the rankings of the players relate to other variables measured about the games. 
+
+::: {.callout-note}
+
+## Pay Attention
+
+The difference in ranking variable used in the next few plots was calculated by subtracting the black player ranking from the white player ranking. This means that larger values of this variable mean that the white player has a much higher ranking, while negative values mean that the black player has a higher ranking. Values around 0 mean that the players are closer in ranking. 
+
+:::
+
+```{r plot, message=FALSE, warning=FALSE}
+# set the theme for ggplot
+theme_set(theme_bw())
+
+# make a box plot that compares the difference in ranking to the winner
+p <- ggplot(chess, aes(winner, dif_rank, fill=winner))
+p + geom_boxplot()+ theme(plot.title = element_text(face = "bold", hjust = 0.5), plot.caption = element_text(hjust = 0)) + ggtitle("Ranking vs Winnner", subtitle="Ranking difference of white minus black compared to the winner") + labs(y = "Difference in ranking (white ranking - black ranking)", x = "Winner", caption= "The boxplot on the left shows the spread in the difference in ranking for games where the black player won. \nThe right boxplot shows the spread in the difference in ranking when the white player won. \nIt looks like in both cases on average the ranking of the player who won was higher.")
+
+# make a scatter plot to compare the difference in rating to the number of moves and the type of win
+e <- ggplot(chess, aes(dif_rank, turns, color='orange'))
+e + geom_point() + theme(plot.title = element_text(face = "bold", hjust = 0.5), plot.caption = element_text(hjust = 0))+ggtitle("Turns vs. Difference in Ranking", subtitle="Ranking difference compared to the number of turns taken in the game") + labs(x = "Difference in ranking (white ranking - black ranking)", y = "Turns", caption= "This scatter plot shows how many turns a game took when for the different rankings of players. \nOn the either extreme of the difference in ranking (meaning one player was ranked much higher than others) \nwe generally see lower number of turns.")
 
 
-I used the functions select, filter, rename,   from dplyr
+f <- e + geom_point()  + theme(plot.title = element_text(face = "bold", hjust = 0.5), plot.caption = element_text(hjust = 0)) + ggtitle("Turns vs. Difference in Ranking", subtitle="Ranking difference compared to the number of turns in the game by the method of winning") + labs(x = "Difference in ranking (white ranking - black ranking)", y = "Turns", caption= "These scatter plots shows the difference in ranking compared to the number of turns taken in the game \nfor every type of game ending. Each facet panel is for a different type of win. \nFor each type of win the overall trend looks similar.")
 
-I used the functions mutate, drop_na from tidyr
+# Use vars() to supply variables from the dataset:
+f + facet_grid(rows = vars(victory_status)) + theme(plot.title = element_text(face = "bold", hjust = 0.5))
 
-I used the functions geom_histogram(), geom_point() , geom_boxplot(), facet_wrap, and facet_grid from ggplot2. 
+
+g <- ggplot(chess, aes(dif_rank))
+n <- g+ geom_histogram(fill = "lightblue")
+n + facet_wrap(vars(winner))+ theme(plot.title = element_text(face = "bold", hjust = 0.5), plot.caption = element_text(hjust = 0)) + ggtitle("Spread of differences in rank vs. Winner", subtitle="The spread of the differences in rank of each game categorized by the winner of the game.") + labs(x = "Difference in ranking (white ranking - black ranking)", y = "Number of Games", caption= "These histograms show the spread of our data based on the difference in rank of the players and how much data \nwe have for each type of game.")
+```
+
+::: {.callout-note}
+
+## Pay Attention
+
+The histograms that show us the spread of the data in difference in rank tell us to be careful when examining the scatter plot that shows difference in ranking compared to turns because we just have so much more data on games where the players have a similar ranking so it is hard to tell just based on the scatter plot if the number of turns actually decrease when the difference in rankings is larger.  
+
+:::
+
+## Logisitic Regression
+
+We now want to fit a logistic regression model to the data to see if the difference in ranking variable has some significance in predicting the winner of the game. 
+
+```{r glm}
+# make the winner a dummy variable 0,1
+chess$winner_dummy <- ifelse(chess$winner == "white", 1, 0)
+
+# fit a logistic regression model to the data to predict winner based on difference in ranking
+glm.fit <- glm(winner_dummy ~ dif_rank, data = chess, family = "binomial")
+summary(glm.fit)
+```
+::: {.column-margin}
+This p-value of 2e-16 indicates that we can reject the null hypothesis that the difference in rank does not have any impact on the winner.
+:::
+
+```{r lm}
+# fit a linear regression to predict turns by difference in ranking
+lm.fit <- lm(turns ~ dif_rank + I(dif_rank^2), data=chess)
+summary(lm.fit)
+```
+::: {.column-margin}
+This p-value of 2e-16 indicates that we can reject the null hypothesis that the difference in rank does not have any impact on the  number of turns taken.
+:::
+
+## Summary
+
+Our goal from this analysis was to understand how the ranking of players affects the outcome of a chess match. When examining the data we created a variable looking at the difference in ranking of the white player and black player. We created a boxplot that showed us that when the white player won, the average difference in ranking was higher for the white player, and when the black player won the difference in ranking was higher for the black player. We later fit a logistic regression to find the relationship between the difference in ranking of the two players and the winner. This logistic regression had a very small p-value which tells us that there is likely a correlation between the difference in ranking of the two players and the winner of the game. I next wanted to look at if this difference in ranking affected the amount of turns a game took because my hypothesis was that if the difference in ranking was higher, than the player with the higher ranking may win in fewer turns. To examine this I plotted a scatter plot to look at the difference in ranking compared to the number of turns taken, in this scatter plot it looked like when the absolute value of the difference in ranking was large, then the game took less turns, this lined up with my hypothesis. I then fit a linear regression model with a degree 2 polynomial on the difference in ranking because the shape of the scatter plot looked more quadratic to me. The resulting p-value was very low which indicates there is a strong correlation between the difference in ranking and the number of turns a game took. From this analysis I think we have seen that the rankings of chess players on this website can provide a good indicator of the result of the game and also how the game will go in terms of the number of turns it may take. 
+
+## Packages used
+DPLYR: I used the functions select, filter and rename from dplyr.
+TIDYR: I used the functions mutate and drop_na from tidyr. 
+GGPLOT2: I used the functions geom_histogram(), geom_point() , geom_boxplot(), facet_wrap, and facet_grid from ggplot2. 
 

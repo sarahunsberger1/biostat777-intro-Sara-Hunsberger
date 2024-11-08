@@ -20,7 +20,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -111,11 +165,30 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#my-question" id="toc-my-question" class="nav-link active" data-scroll-target="#my-question">My question:</a>
+  <ul class="collapse">
+  <li><a href="#intended-audience" id="toc-intended-audience" class="nav-link" data-scroll-target="#intended-audience">Intended Audience:</a></li>
+  <li><a href="#data-description" id="toc-data-description" class="nav-link" data-scroll-target="#data-description">Data description:</a></li>
+  <li><a href="#data-dictionary" id="toc-data-dictionary" class="nav-link" data-scroll-target="#data-dictionary">Data Dictionary</a></li>
+  </ul></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a>
+  <ul class="collapse">
+  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning">Data Cleaning</a></li>
+  <li><a href="#plotting" id="toc-plotting" class="nav-link" data-scroll-target="#plotting">Plotting</a></li>
+  <li><a href="#logisitic-regression" id="toc-logisitic-regression" class="nav-link" data-scroll-target="#logisitic-regression">Logisitic Regression</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#packages-used" id="toc-packages-used" class="nav-link" data-scroll-target="#packages-used">Packages used</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-other-links"><h2>Other Links</h2><ul><li><a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2024/2024-10-01/readme.md"><i class="bi bi-link-45deg"></i>Chess Data Dictionary</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -136,10 +209,233 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="chess-pic.png" class="img-fluid figure-img"></p>
+<figcaption><span class="citation" data-cites="jana_mathews_chess_2024">Jana Mathews (<a href="#ref-jana_mathews_chess_2024" role="doc-biblioref">2024</a>)</span></figcaption>
+</figure>
+</div>
+<section id="my-question" class="level1">
+<h1>My question:</h1>
+<p>We want to examine how well the ranking of a chess player can predict the results of a chess game.</p>
+<section id="intended-audience" class="level2">
+<h2 class="anchored" data-anchor-id="intended-audience">Intended Audience:</h2>
+<p>This analysis could be used by current chess players to see how much their difference in ranking from another player may predict their ability to win against them. It could also be used by the website to determine if the way that they are ranking the players is a good system.</p>
+</section>
+<section id="data-description" class="level2">
+<h2 class="anchored" data-anchor-id="data-description">Data description:</h2>
+<p>This data comes from over 20,000 games of chess played on the site Lichess.org and describes the ranking of each player, how the game went and the winner of the game. <span class="citation" data-cites="mitchell_j_chess_nodate">(<a href="#ref-mitchell_j_chess_nodate" role="doc-biblioref">MITCHELL J n.d.</a>)</span></p>
+</section>
+<section id="data-dictionary" class="level2">
+<h2 class="anchored" data-anchor-id="data-dictionary">Data Dictionary</h2>
+<p>The data dictionary can be found at the link in the “Other links” section on the left of this page <span class="citation" data-cites="noauthor_data_nodate">(<a href="#ref-noauthor_data_nodate" role="doc-biblioref"><span>“Data <span>Science</span> <span>Learning</span> <span>Community</span>”</span> n.d.</a>)</span>.</p>
+</section>
+</section>
+<section id="analysis" class="level1 page-columns page-full">
+<h1>Analysis</h1>
+<section id="data-cleaning" class="level3">
+<h3 class="anchored" data-anchor-id="data-cleaning">Data Cleaning</h3>
+<p>We first want to load the data from the github repository. I then clean the data by dropping all NA values and selecting only the variables that I care about for this analysis. For the purposes of this analysis I only want to look at games that had a clear winner and did not have a draw, so I filtered the data based on games that did not end in a draw. Finally, I made a new column that is the difference between the white player ranking and the black player ranking because I am interested in how well this difference can describe how the game is played and the outcome.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># read the data from Git</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>chess <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2024/2024-10-01/chess.csv'</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># look at the data</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(chess)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "game_id"        "rated"          "start_time"     "end_time"      
+ [5] "turns"          "victory_status" "winner"         "time_increment"
+ [9] "white_id"       "white_rating"   "black_id"       "black_rating"  
+[13] "moves"          "opening_eco"    "opening_name"   "opening_ply"   </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># drop any na rows in  the dataframe</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>chess <span class="ot">&lt;-</span> <span class="fu">drop_na</span>(chess)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># select a couple continuous variables to look at</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"turns"</span>, <span class="st">"winner"</span> , <span class="st">"white_rating"</span>, <span class="st">"black_rating"</span>,<span class="st">"time_increment"</span>, <span class="st">"victory_status"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>chess<span class="ot">&lt;-</span> chess <span class="sc">%&gt;%</span> <span class="fu">select</span>(vars)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># filter the data to only games with a winner, no draws</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>chess <span class="ot">&lt;-</span> chess <span class="sc">%&gt;%</span> <span class="fu">filter</span>(chess<span class="sc">$</span>winner <span class="sc">!=</span> <span class="st">"draw"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># make a column that shows the difference between the white and black ranking</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>chess <span class="ot">&lt;-</span> chess <span class="sc">%&gt;%</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">dif_rank =</span> white_rating<span class="sc">-</span>black_rating</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># rename to make more clear</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>chess <span class="ot">&lt;-</span> <span class="fu">rename</span>(chess, <span class="at">time =</span> time_increment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="plotting" class="level3">
+<h3 class="anchored" data-anchor-id="plotting">Plotting</h3>
+<p>In this section I create multiple plots to examine the data. I am interested in how the rankings of the players affects the outcome. Each of the following plots shows a different aspect of how the rankings of the players relate to other variables measured about the games.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Pay Attention
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The difference in ranking variable used in the next few plots was calculated by subtracting the black player ranking from the white player ranking. This means that larger values of this variable mean that the white player has a much higher ranking, while negative values mean that the black player has a higher ranking. Values around 0 mean that the players are closer in ranking.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set the theme for ggplot</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># make a box plot that compares the difference in ranking to the winner</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(chess, <span class="fu">aes</span>(winner, dif_rank, <span class="at">fill=</span>winner))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">geom_boxplot</span>()<span class="sc">+</span> <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>)) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Ranking vs Winnner"</span>, <span class="at">subtitle=</span><span class="st">"Ranking difference of white minus black compared to the winner"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Difference in ranking (white ranking - black ranking)"</span>, <span class="at">x =</span> <span class="st">"Winner"</span>, <span class="at">caption=</span> <span class="st">"The boxplot on the left shows the spread in the difference in ranking for games where the black player won. </span><span class="sc">\n</span><span class="st">The right boxplot shows the spread in the difference in ranking when the white player won. </span><span class="sc">\n</span><span class="st">It looks like in both cases on average the ranking of the player who won was higher."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="example_analysis_files/figure-html/plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make a scatter plot to compare the difference in rating to the number of moves and the type of win</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(chess, <span class="fu">aes</span>(dif_rank, turns, <span class="at">color=</span><span class="st">'orange'</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>e <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>))<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Turns vs. Difference in Ranking"</span>, <span class="at">subtitle=</span><span class="st">"Ranking difference compared to the number of turns taken in the game"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Difference in ranking (white ranking - black ranking)"</span>, <span class="at">y =</span> <span class="st">"Turns"</span>, <span class="at">caption=</span> <span class="st">"This scatter plot shows how many turns a game took when for the different rankings of players. </span><span class="sc">\n</span><span class="st">On the either extreme of the difference in ranking (meaning one player was ranked much higher than others) </span><span class="sc">\n</span><span class="st">we generally see lower number of turns."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="example_analysis_files/figure-html/plot-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> e <span class="sc">+</span> <span class="fu">geom_point</span>()  <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>)) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Turns vs. Difference in Ranking"</span>, <span class="at">subtitle=</span><span class="st">"Ranking difference compared to the number of turns in the game by the method of winning"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Difference in ranking (white ranking - black ranking)"</span>, <span class="at">y =</span> <span class="st">"Turns"</span>, <span class="at">caption=</span> <span class="st">"These scatter plots shows the difference in ranking compared to the number of turns taken in the game </span><span class="sc">\n</span><span class="st">for every type of game ending. Each facet panel is for a different type of win. </span><span class="sc">\n</span><span class="st">For each type of win the overall trend looks similar."</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Use vars() to supply variables from the dataset:</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>f <span class="sc">+</span> <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(victory_status)) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="example_analysis_files/figure-html/plot-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(chess, <span class="fu">aes</span>(dif_rank))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> g<span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">fill =</span> <span class="st">"lightblue"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>n <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(winner))<span class="sc">+</span> <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>)) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Spread of differences in rank vs. Winner"</span>, <span class="at">subtitle=</span><span class="st">"The spread of the differences in rank of each game categorized by the winner of the game."</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Difference in ranking (white ranking - black ranking)"</span>, <span class="at">y =</span> <span class="st">"Number of Games"</span>, <span class="at">caption=</span> <span class="st">"These histograms show the spread of our data based on the difference in rank of the players and how much data </span><span class="sc">\n</span><span class="st">we have for each type of game."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="example_analysis_files/figure-html/plot-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Pay Attention
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The histograms that show us the spread of the data in difference in rank tell us to be careful when examining the scatter plot that shows difference in ranking compared to turns because we just have so much more data on games where the players have a similar ranking so it is hard to tell just based on the scatter plot if the number of turns actually decrease when the difference in rankings is larger.</p>
+</div>
+</div>
+</section>
+<section id="logisitic-regression" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="logisitic-regression">Logisitic Regression</h2>
+<p>We now want to fit a logistic regression model to the data to see if the difference in ranking variable has some significance in predicting the winner of the game.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make the winner a dummy variable 0,1</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>chess<span class="sc">$</span>winner_dummy <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(chess<span class="sc">$</span>winner <span class="sc">==</span> <span class="st">"white"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># fit a logistic regression model to the data to predict winner based on difference in ranking</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>glm.fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(winner_dummy <span class="sc">~</span> dif_rank, <span class="at">data =</span> chess, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glm.fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = winner_dummy ~ dif_rank, family = "binomial", data = chess)
+
+Coefficients:
+             Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) 8.227e-02  1.563e-02   5.264 1.41e-07 ***
+dif_rank    3.871e-03  8.407e-05  46.041  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 26447  on 19107  degrees of freedom
+Residual deviance: 23486  on 19106  degrees of freedom
+AIC: 23490
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>This p-value of 2e-16 indicates that we can reject the null hypothesis that the difference in rank does not have any impact on the winner.</p>
+</div></div><div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit a linear regression to predict turns by difference in ranking</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>lm.fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(turns <span class="sc">~</span> dif_rank <span class="sc">+</span> <span class="fu">I</span>(dif_rank<span class="sc">^</span><span class="dv">2</span>), <span class="at">data=</span>chess)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm.fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = turns ~ dif_rank + I(dif_rank^2), data = chess)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-59.634 -22.537  -4.702  17.269 288.167 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    6.071e+01  2.548e-01 238.308  &lt; 2e-16 ***
+dif_rank      -3.781e-03  9.287e-04  -4.072 4.69e-05 ***
+I(dif_rank^2) -2.373e-05  1.663e-06 -14.269  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 32.12 on 19105 degrees of freedom
+Multiple R-squared:  0.01178,   Adjusted R-squared:  0.01168 
+F-statistic: 113.9 on 2 and 19105 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>This p-value of 2e-16 indicates that we can reject the null hypothesis that the difference in rank does not have any impact on the number of turns taken.</p>
+</div></div></section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Our goal from this analysis was to understand how the ranking of players affects the outcome of a chess match. When examining the data we created a variable looking at the difference in ranking of the white player and black player. We created a boxplot that showed us that when the white player won, the average difference in ranking was higher for the white player, and when the black player won the difference in ranking was higher for the black player. We later fit a logistic regression to find the relationship between the difference in ranking of the two players and the winner. This logistic regression had a very small p-value which tells us that there is likely a correlation between the difference in ranking of the two players and the winner of the game. I next wanted to look at if this difference in ranking affected the amount of turns a game took because my hypothesis was that if the difference in ranking was higher, than the player with the higher ranking may win in fewer turns. To examine this I plotted a scatter plot to look at the difference in ranking compared to the number of turns taken, in this scatter plot it looked like when the absolute value of the difference in ranking was large, then the game took less turns, this lined up with my hypothesis. I then fit a linear regression model with a degree 2 polynomial on the difference in ranking because the shape of the scatter plot looked more quadratic to me. The resulting p-value was very low which indicates there is a strong correlation between the difference in ranking and the number of turns a game took. From this analysis I think we have seen that the rankings of chess players on this website can provide a good indicator of the result of the game and also how the game will go in terms of the number of turns it may take.</p>
+</section>
+<section id="packages-used" class="level2">
+<h2 class="anchored" data-anchor-id="packages-used">Packages used</h2>
+<p>DPLYR: I used the functions select, filter and rename from dplyr. TIDYR: I used the functions mutate and drop_na from tidyr. GGPLOT2: I used the functions geom_histogram(), geom_point() , geom_boxplot(), facet_wrap, and facet_grid from ggplot2.</p>
 
 
 
-</main> <!-- /main -->
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-noauthor_data_nodate" class="csl-entry" role="listitem">
+<span>“Data <span>Science</span> <span>Learning</span> <span>Community</span>.”</span> n.d. <em>DSLC</em>. Accessed November 6, 2024.
+</div>
+<div id="ref-jana_mathews_chess_2024" class="csl-entry" role="listitem">
+Jana Mathews. 2024. <span>“Chess and Business Growth Are More Similar Than You Think.”</span> <em>Univeristy of South Austrlia: Australian Center for Business Growth</em>. <a href="https://centreforbusinessgrowth.com/news-and-events/why-growing-a-business-is-like-learning-to-play-four-dimensional-chess/">https://centreforbusinessgrowth.com/news-and-events/why-growing-a-business-is-like-learning-to-play-four-dimensional-chess/</a>.
+</div>
+<div id="ref-mitchell_j_chess_nodate" class="csl-entry" role="listitem">
+MITCHELL J. n.d. <span>“Chess <span>Game</span> <span>Dataset</span>.”</span> Kaggle. <em>Lichess</em>. Accessed November 6, 2024. <a href="https://www.kaggle.com/datasets/datasnaek/chess/data">https://www.kaggle.com/datasets/datasnaek/chess/data</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

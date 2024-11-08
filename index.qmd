@@ -33,6 +33,10 @@ The TAs will grade the contents in the GitHub repo by cloning the repo and check
 2. Reflect on the questions in the "Defining your brand" section. 
 3. Write two paragraphs (4-6 sentences) max here answering one (or more) of the questions asked in the section above.
 
+Throughout my undergraduate career I was trying to figure out the different things that I was interested in, which turned out to be understanding how the world worked through science and math. I discovered through taking chemistry and math classes that I liked to understand the theoretical reasons of why things happen the way that they do in our world. I also discovered through research that combined both chemistry and math that a lot of chemistry theory uses very complex mathematical ideas. I became very excited in applying theoretical mathematical ideas to explain the phenomena that we see around us and the idea of working to understand different scientific ideas from a mathematical perspective. I would like my future work to explore this area of research and delve into collaborations with scientists in different areas to explore how they are using mathematical concepts in their fields and working to create new methods to understand ideas that they are exploring. 
+
+I would like to build my career around collaboration and discovery, which I think are things that the biostatistics community really values as a whole. I decided to go into biostatistics because it felt like a field where the community values working together and working with other scientists to understand different ideas. In 5-10 years I will ideally be working with multiple collaborators to come up with new statistical methods and thinking about how those methods can impact our scientific understanding of different health conditions. I would like my career to be one where I feel like I am contributing to scientific understanding while also enjoying the theoretical work that I feel like I don't really get tired of doing. 
+
 
 # Part 2
 
@@ -105,86 +109,70 @@ ID,Name,Age,Gender,Grade,Subject
 1. Use [`wget`](https://www.gnu.org/software/wget) to download the `students.csv` file locally from [here](https://github.com/stephaniehicks/jhustatprogramming2024/blob/main/projects/01-project/students.csv).
 
 ``` {bash}
-# Add your solution here
-
-
+wget https://raw.githubusercontent.com/stephaniehicks/jhustatprogramming2024/refs/heads/main/projects/01-project/students.csv
 ```
 
 2. Display the contents of the `students.csv` file using the `cat` command.
 
 ```{bash}
-# Add your solution here
-
-
+cat students.csv
 ```
 
 3. Display only the first 5 lines of the file using `head` to show the first few lines. 
 
 ```{bash}
-# Add your solution here
-
-
+head -5 students.csv
 ```
 
 4. Display only the last 3 lines of the file using `tail` to show the last few lines.
 
 ```{bash}
-# Add your solution here
-
-
+tail -3 students.csv
 ```
 
 5. Count the number of lines in the file using the `wc` command to count the lines.
 
 ```{bash}
-# Add your solution here
-
-
+wc -l students.csv
 ```
 
 6. Find all students who are taking "Math" as a subject using `grep` to filter lines with the subject "Math".
 
 ```{bash}
-# Add your solution here
-
-
+grep "Math" students.csv
 ```
 
 7. Find all female students using `grep` or `awk` to filter based on gender.
 ```{bash}
-# Add your solution here
-
-
+grep ",F," students.csv
 ```
 
 8. Sort the file by the students' ages in ascending order. Use `sort` to order by the "Age" column.
 
 ```{bash}
-# Add your solution here
-
-
+sort --field-separator=',' -n -k3 students.csv
 ```
 
-1. Find the unique subjects listed in the file. Use `cut`, `sort`, and `uniq` to extract unique subjects.
+9. Find the unique subjects listed in the file. Use `cut`, `sort`, and `uniq` to extract unique subjects.
 
 ```{bash}
-# Add your solution here
-
+cut -d "," -f 6 students.csv > subject.txt
+sort subject.txt > subject_sort.txt
+uniq subject_sort.txt
 ```
 
 10. Calculate the average grade of the students. Use `awk` to sum the grades and divide by the number of students.
 
 ```{bash}
-# Add your solution here
-
+tail -10 students.csv > students_tail.csv
+awk -F',' '{ sum += $5 } END { avg = sum / NR; print "Average: " avg }' students_tail.csv
 ```
 
 11. Replace all occurrences of "Math" with "Mathematics" in the file. Use `sed` to perform the replacement.
 
 
 ```{bash}
-# Add your solution here
-
+sed 's/Math/Mathematics/' students.csv
 ```
 
 
